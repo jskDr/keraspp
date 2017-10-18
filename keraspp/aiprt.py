@@ -1,3 +1,8 @@
+"""
+Pretrained methods
+- MIT Licence
+- Sungjin Kim
+"""
 import numpy as np
 from keras import backend as K
 from keras.models import Model
@@ -5,10 +10,11 @@ from keras.layers import Dense, GlobalAveragePooling2D, Dropout, BatchNormalizat
 from keras.applications.imagenet_utils import preprocess_input
 from keras.applications import VGG16
 
-from . import ai
+from . import aicnn
+from . import aigen
 
 
-class CNN(ai.CNN):
+class CNN(aicnn.CNN):
     def __init__(model, input_shape, nb_classes,
                  n_dense=128, p_dropout=0.5, BN_flag=False,
                  PretrainedModel=VGG16):
@@ -73,7 +79,7 @@ class CNN(ai.CNN):
         return h
 
 
-class DataSet(ai.DataSet):
+class DataSet(aicnn.DataSet):
     def __init__(self, X, y, nb_classes, n_channels=3, scaling=True,
                  test_size=0.2, random_state=0):
         self.n_channels = n_channels
@@ -114,7 +120,10 @@ class DataSet(ai.DataSet):
             self.input_shape = input_shape
 
 
-class Machine_Generator(ai.Machine_Generator):
+class Machine_Generator(aigen.Machine_Generator):
+    """
+    This Machine Generator is for pretrained approach.
+    """
     def __init__(self, X, y, nb_classes=2, steps_per_epoch=10,
                  n_dense=128, p_dropout=0.5, BN_flag=False,
                  scaling=False,
@@ -150,14 +159,3 @@ class Machine_Generator(ai.Machine_Generator):
                          n_dense=n_dense, p_dropout=p_dropout, BN_flag=BN_flag,
                          PretrainedModel=PretrainedModel)
 
-
-def get_features_pretrained(X_org, PretrainedModel=VGG16):
-    """
-    get features by pre-trained networks
-    :param Pretrained: VGG16 is default
-    :return: features
-    """
-    X = preprocess_input(X_org)
-    model = PretrainedModel(weights='imagenet', include_top=False, input_shape=X.shape[1:])
-    features = model.predict(X)
-    return features

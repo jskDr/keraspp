@@ -1,3 +1,8 @@
+"""
+CNN for image classification
+- MIT License
+- Author: Sungjin Kim
+"""
 from sklearn import model_selection, metrics
 from sklearn.preprocessing import MinMaxScaler
 import numpy as np
@@ -13,7 +18,45 @@ from . import skeras
 from . import sfile
 
 
-class DataSet():
+class CNN(Model):
+    def __init__(model, nb_classes, in_shape=None):
+        model.nb_classes = nb_classes
+        model.in_shape = in_shape
+        model.build_model()
+        super().__init__(model.x, model.y)
+        model.compile()
+
+    def build_model(model):
+        nb_classes = model.nb_classes
+        in_shape = model.in_shape
+
+        x = Input(in_shape)
+
+        h = Conv2D(32, kernel_size=(3, 3), activation='relu',
+                   input_shape=in_shape)(x)
+        h = Conv2D(64, (3, 3), activation='relu')(h)
+        h = MaxPooling2D(pool_size=(2, 2))(h)
+        h = Dropout(0.25)(h)
+        h = Flatten()(h)
+        z_cl = h
+
+        h = Dense(128, activation='relu')(h)
+        h = Dropout(0.5)(h)
+        z_fl = h
+
+        y = Dense(nb_classes, activation='softmax', name='preds')(h)
+
+        model.cl_part = Model(x, z_cl)
+        model.fl_part = Model(x, z_fl)
+
+        model.x, model.y = x, y
+
+    def compile(model):
+        Model.compile(model, loss='categorical_crossentropy',
+                      optimizer='adadelta', metrics=['accuracy'])
+
+
+class DataSet:
     def __init__(self, X, y, nb_classes, scaling=True, test_size=0.2, random_state=0):
         """
         X is originally vector. Hence, it will be transformed
@@ -75,44 +118,6 @@ class DataSet():
         self.input_shape = input_shape
 
 
-class CNN(Model):
-    def __init__(model, nb_classes, in_shape=None):
-        model.nb_classes = nb_classes
-        model.in_shape = in_shape
-        model.build_model()
-        super().__init__(model.x, model.y)
-        model.compile()
-
-    def build_model(model):
-        nb_classes = model.nb_classes
-        in_shape = model.in_shape
-
-        x = Input(in_shape)
-
-        h = Conv2D(32, kernel_size=(3, 3), activation='relu',
-                   input_shape=in_shape)(x)
-        h = Conv2D(64, (3, 3), activation='relu')(h)
-        h = MaxPooling2D(pool_size=(2, 2))(h)
-        h = Dropout(0.25)(h)
-        h = Flatten()(h)
-        z_cl = h
-
-        h = Dense(128, activation='relu')(h)
-        h = Dropout(0.5)(h)
-        z_fl = h
-
-        y = Dense(nb_classes, activation='softmax', name='preds')(h)
-
-        model.cl_part = Model(x, z_cl)
-        model.fl_part = Model(x, z_fl)
-
-        model.x, model.y = x, y
-
-    def compile(model):
-        Model.compile(model, loss='categorical_crossentropy',
-                      optimizer='adadelta', metrics=['accuracy'])
-
-
 class Machine():
     def __init__(self, X, y, nb_classes=2, fig=True):
         self.nb_classes = nb_classes
@@ -139,7 +144,7 @@ class Machine():
                             verbose=verbose, validation_data=(data.X_test, data.Y_test))
         return history
 
-    def run(self, epochs=10, batch_size=128, verbose=1):
+    def run(self, epochs=100, batch_size=128, verbose=1):
         data = self.data
         model = self.model
         fig = self.fig
