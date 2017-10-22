@@ -1,5 +1,7 @@
 # Output folds
 output_*/
+GAN_OUT/
+keraspp/GAN_OUT/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
