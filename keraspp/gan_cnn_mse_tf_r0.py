@@ -8,6 +8,8 @@ import math
 import os
 
 import keras.backend as K
+import tensorflow as tf
+
 
 K.set_image_data_format('channels_first')
 print(K.image_data_format)
@@ -16,6 +18,23 @@ print(K.image_data_format)
 # GAN 모델링
 ################################
 from keras import models, layers, optimizers
+
+
+def mean_squared_error_4d(y_true, y_pred):
+    #return K.mean(K.square(y_pred - y_true), axis=-1)
+    #return K.mean(tf.square(y_pred - y_true), axis=-1)
+    shape = tf.shape(y_true)
+    # shape_middle = tf.identity(shape)
+    shape_middle = [shape[0] // 2, shape[1], shape[2], shape[3]]
+
+    yp_left = tf.slice(y_pred, [0, 0, 0, 0], shape_middle)
+    yp_right = tf.slice(y_pred, shape_middle, shape)
+    yt_left = tf.slice(y_true, [0, 0, 0, 0], shape_middle)
+    yt_right = tf.slice(y_true, shape_middle, shape)
+
+    mean_left = tf.reduce_mean(tf.square(yp_left - yt_left), axis=(1,2,3))
+    mean_right = tf.reduce_mean(tf.square(yp_right - yt_right), axis=(1,2,3))
+    return tf.add(mean_left, tf.scalar_mul(1.0, mean_right))
 
 
 class GAN(models.Sequential):
@@ -38,7 +57,7 @@ class GAN(models.Sequential):
         # Compiling stage
         d_optim = optimizers.SGD(lr=0.0005, momentum=0.9, nesterov=True)
         g_optim = optimizers.SGD(lr=0.0005, momentum=0.9, nesterov=True)
-        self.generator.compile(loss='binary_crossentropy', optimizer="SGD")
+        self.generator.compile(loss=mean_squared_error_4d, optimizer="SGD")
         self.compile(loss='binary_crossentropy', optimizer=g_optim)
         self.discriminator.trainable = True
         self.discriminator.compile(loss='binary_crossentropy', optimizer=d_optim)
@@ -114,7 +133,6 @@ def get_x(X_train, index, BATCH_SIZE):
 
 
 def save_images(generated_images, output_fold, epoch, index):
-    # print(generated_images.shape)
     image = combine_images(generated_images)
     image = image * 127.5 + 127.5
     Image.fromarray(image.astype(np.uint8)).save(
@@ -177,16 +195,22 @@ def train(args):
 ################################
 # GAN 예제 실행하기
 ################################
+import argparse
+
 def main():
-    class ARGS:
-        pass
+    parser = argparse.ArgumentParser()
 
-    args = ARGS()
-    args.batch_size = 2
-    args.epochs = 1000
-    args.output_fold = 'GAN_OUT'
-    args.input_dim = 10
+    parser.add_argument('--batch_size', type=int, default=2,
+        help='Batch size for the networks')
+    parser.add_argument('--epochs', type=int, default=1000,
+        help='Epochs for the networks')
+    parser.add_argument('--output_fold', type=str, default='GAN_OUT',
+        help='Output fold to save the results')
+    parser.add_argument('--input_dim', type=int, default=2,
+        help='Input dimension for the generator.')
 
+    args = parser.parse_args()
+    
     train(args)
 
 

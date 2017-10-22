@@ -32,6 +32,9 @@ class GAN(models.Sequential):
         self.discriminator.trainable = False
         self.add(self.discriminator)
 
+        self.compile_all()
+
+    def compile_all(self):
         # Compiling stage
         d_optim = optimizers.SGD(lr=0.0005, momentum=0.9, nesterov=True)
         g_optim = optimizers.SGD(lr=0.0005, momentum=0.9, nesterov=True)
@@ -179,7 +182,7 @@ def main():
 
     args = ARGS()
     args.batch_size = 2
-    args.epochs = 1000
+    args.epochs = 10
     args.output_fold = 'GAN_OUT'
     args.input_dim = 10
 
