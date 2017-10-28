@@ -86,8 +86,8 @@ import matplotlib.pyplot as plt
 
 def plot_loss(history):
     # summarize history for loss
-    plt.plot(history.history['loss'], ':k')
-    plt.plot(history.history['val_loss'], '-k')
+    plt.plot(history.history['loss'])
+    plt.plot(history.history['val_loss'])
     plt.title('Model Loss')
     plt.ylabel('Loss')
     plt.xlabel('Epoch')
@@ -96,8 +96,8 @@ def plot_loss(history):
 
 def plot_acc(history):
     # summarize history for accuracy
-    plt.plot(history.history['acc'], ':k')
-    plt.plot(history.history['val_acc'], '-k')
+    plt.plot(history.history['acc'])
+    plt.plot(history.history['val_acc'])
     plt.title('Model accuracy')
     plt.ylabel('Accuracy')
     plt.xlabel('Epoch')

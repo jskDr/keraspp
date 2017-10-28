@@ -77,7 +77,7 @@ class GAN(models.Sequential):
         ln = x.shape[0]
         # First trial for training discriminator
         z = self.get_z(ln)
-        w = self.generator.predict(z, verbose=0)
+        w = self.generator.predict_on_batch(z, verbose=0)
         xw = np.concatenate((x, w))
         y2 = [1] * ln + [0] * ln
         d_loss = self.discriminator.train_on_batch(xw, y2)
@@ -161,7 +161,7 @@ def train(args):
 
         if epoch % 10 == 0 or epoch == epochs - 1:
             z = gan.get_z(x.shape[0])
-            w = gan.generator.predict(z, verbose=0)
+            w = gan.generator.predict_on_batch(z, verbose=0)
             save_images(w, output_fold, epoch, 0)
 
         d_loss_ll.append(d_loss_l)

@@ -1,4 +1,3 @@
-# 파일명: ex1-1.py
 import keras
 import numpy
 
@@ -11,5 +10,5 @@ model.compile('SGD', 'mse')
 
 model.fit(x[:2], y[:2], epochs=1000, verbose=0)
 
-print('목표 결과:', y[2:])
-print('예측 결과:', model.predict(x[2:]).flatten())
+print('Targets:', y[2:])
+print('Predictions:', model.predict(x[2:]).flatten())

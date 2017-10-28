@@ -62,7 +62,7 @@ class DATA():
 ###########################
 # 학습 효과 분석
 ###########################
-from ann_mnist_cl import plot_acc, plot_loss
+from keraspp.skeras import plot_acc, plot_loss
 import matplotlib.pyplot as plt
 
 
