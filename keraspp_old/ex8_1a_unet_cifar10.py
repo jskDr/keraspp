@@ -1,16 +1,9 @@
-#######################################################################################
-# unet_conv_cifar10rgb_mc.py
-# Convlutional Layer UNET with RGB Cifar10 dataset and Class with Keras Model approach
-#######################################################################################
-
 ###########################
-# AE 모델링
+# UNET 모델링
 ###########################
 from keras import models, backend
 from keras.layers import Input, Conv2D, MaxPooling2D, Dropout, \
-    UpSampling2D, BatchNormalization, Concatenate, Activation
-
-# backend.set_image_data_format('channels_first')
+    UpSampling2D, BatchNormalization, Concatenate
 
 
 class UNET(models.Model):
@@ -19,24 +12,20 @@ class UNET(models.Model):
 
         def conv(x, n_f, mp_flag=True):
             x = MaxPooling2D((2, 2), padding='same')(x) if mp_flag else x
-            x = Conv2D(n_f, (3, 3), padding='same')(x)
+            x = Conv2D(n_f, (3, 3), padding='same', activation='relu')(x)
             x = BatchNormalization()(x)
-            x = Activation('tanh')(x)
             x = Dropout(0.05)(x)
-            x = Conv2D(n_f, (3, 3), padding='same')(x)
+            x = Conv2D(n_f, (3, 3), padding='same', activation='relu')(x)
             x = BatchNormalization()(x)
-            x = Activation('tanh')(x)
             return x
 
         def deconv_unet(x, e, n_f):
             x = UpSampling2D((2, 2))(x)
             x = Concatenate(axis=ic)([x, e])
-            x = Conv2D(n_f, (3, 3), padding='same')(x)
+            x = Conv2D(n_f, (3, 3), padding='same', activation='relu')(x)
             x = BatchNormalization()(x)
-            x = Activation('tanh')(x)
-            x = Conv2D(n_f, (3, 3), padding='same')(x)
+            x = Conv2D(n_f, (3, 3), padding='same', activation='relu')(x)
             x = BatchNormalization()(x)
-            x = Activation('tanh')(x)
             return x
 
         # Input
@@ -70,10 +59,7 @@ class DATA():
     def __init__(self, in_ch=None):
         (x_train, y_train), (x_test, y_test) = datasets.cifar10.load_data()
         if x_train.ndim == 4:
-            if backend.image_data_format() == 'channels_first':
-                n_ch, img_rows, img_cols = x_train.shape[1:]
-            else:
-                img_rows, img_cols, n_ch = x_train.shape[1:]
+            img_rows, img_cols, n_ch = x_train.shape[1:]
         else:
             img_rows, img_cols = x_train.shape[1:]
             n_ch = 1
@@ -96,15 +82,6 @@ class DATA():
                 B = X[..., 2:3]
             return 0.299 * R + 0.587 * G + 0.114 * B
 
-        def RGB2RG(x_train_out, x_test_out, fmt):
-            if fmt == 'channels_first':
-                x_train_in = x_train_out[:, :2]
-                x_test_in = x_test_out[:, :2]
-            else:
-                x_train_in = x_train_out[..., :2]
-                x_test_in = x_test_out[..., :2]
-            return x_train_in, x_test_in
-
         if backend.image_data_format() == 'channels_first':
             x_train_out = x_train.reshape(x_train.shape[0], n_ch, img_rows, img_cols)
             x_test_out = x_test.reshape(x_test.shape[0], n_ch, img_rows, img_cols)
@@ -117,9 +94,6 @@ class DATA():
         if in_ch == 1 and n_ch == 3:
             x_train_in = RGB2Gray(x_train_out, backend.image_data_format())
             x_test_in = RGB2Gray(x_test_out, backend.image_data_format())
-        elif in_ch == 2 and n_ch == 3:
-            # print(in_ch, n_ch)
-            x_train_in, x_test_in = RGB2RG(x_train_out, x_test_out, backend.image_data_format())
         else:
             x_train_in = x_train_out
             x_test_in = x_test_out
@@ -128,57 +102,36 @@ class DATA():
         self.x_train_in, self.x_train_out = x_train_in, x_train_out
         self.x_test_in, self.x_test_out = x_test_in, x_test_out
         self.n_ch = n_ch
-        self.in_ch = in_ch
 
 
 ###########################
-# UNET 검증
+# UNET 학습 그래프 그리기 
 ###########################
-from ann_mnist_cl import plot_loss
+from ann_conv_mnist_mc import plot_loss
 import matplotlib.pyplot as plt
 
 
 ###########################
 # UNET 동작 확인
 ###########################
-import numpy as np
-
-
-def show_images(data, unet):
+def show_images(data, autoencoder):
     x_test_in = data.x_test_in
     x_test_out = data.x_test_out
-    decoded_imgs = unet.predict(x_test_in)
+    decoded_imgs = autoencoder.predict(x_test_in)
 
     if backend.image_data_format() == 'channels_first':
-        print(x_test_out.shape)
-        x_test_out = x_test_out.swapaxes(1, 3).swapaxes(1, 2)
-        print(x_test_out.shape)
-        decoded_imgs = decoded_imgs.swapaxes(1, 3).swapaxes(1, 2)
-        if data.in_ch == 1:
-            x_test_in = x_test_in[:, 0, ...]
-        elif data.in_ch == 2:
-            print(x_test_out.shape)
-            x_test_in_tmp = np.zeros_like(x_test_out)
-            x_test_in = x_test_in.swapaxes(1, 3).swapaxes(1, 2)
-            x_test_in_tmp[..., :2] = x_test_in
-            x_test_in = x_test_in_tmp
-        else:
-            x_test_in = x_test_in.swapaxes(1, 3).swapaxes(1, 2)
+        x_test_in = x_test_in[:, 0, ...]
+        x_test_out = x_test_out.swapaxes(1, 3)
+        decoded_imgs = decoded_imgs.swapaxes(1, 3)
     else:
-        # x_test_in = x_test_in[..., 0]
-        if data.in_ch == 1:
-            x_test_in = x_test_in[..., 0]
-        elif data.in_ch == 2:
-            x_test_in_tmp = np.zeros_like(x_test_out)
-            x_test_in_tmp[..., :2] = x_test_in
-            x_test_in = x_test_in_tmp
+        x_test_in = x_test_in[..., 0]
 
     n = 10
     plt.figure(figsize=(20, 6))
     for i in range(n):
 
         ax = plt.subplot(3, n, i + 1)
-        plt.imshow(x_test_in[i])
+        plt.imshow(x_test_in[i], cmap='gray')
         # plt.gray()
         ax.get_xaxis().set_visible(False)
         ax.get_yaxis().set_visible(False)
@@ -198,13 +151,13 @@ def show_images(data, unet):
     plt.show()
 
 
-def main(in_ch, epochs=10, batch_size=128, fig=True):
+def main(epochs=100, batch_size=128, fig=True):
     ###########################
     # 학습 및 확인
     ###########################
 
-    data = DATA(in_ch=in_ch)
-    print(data.input_shape, data.x_train_in.shape)
+    # BW to Color
+    data = DATA(in_ch=1)
     unet = UNET(data.input_shape, data.n_ch)
 
     history = unet.fit(data.x_train_in, data.x_train_out,
@@ -222,9 +175,7 @@ if __name__ == '__main__':
     import argparse
     from distutils import util
 
-    parser = argparse.ArgumentParser(description='UNET for Cifar-10: RG to RGB')
-    parser.add_argument('--input_channels', type=int, default=2,
-                        help='input channels (default: 2)')
+    parser = argparse.ArgumentParser(description='UNET for Cifar-10: BW to Color')
     parser.add_argument('--epochs', type=int, default=128,
                         help='training epochs (default: 128)')
     parser.add_argument('--batch_size', type=int, default=20,
@@ -234,5 +185,4 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     print("Aargs:", args)
-    main(args.input_channels, args.epochs, args.batch_size, args.fig)
-
+    main(args.epochs, args.batch_size, args.fig)
