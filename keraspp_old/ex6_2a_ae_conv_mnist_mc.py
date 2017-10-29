@@ -60,7 +60,7 @@ import matplotlib.pyplot as plt
 
 
 ###########################
-# AE 결과 시각화
+# AE 동작 확인
 ###########################
 from keras import backend 
 
