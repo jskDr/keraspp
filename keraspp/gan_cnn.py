@@ -69,10 +69,6 @@ class GAN(models.Sequential):
         model.add(layers.Dense(1, activation='sigmoid'))
         return model
 
-    def get_z(self, ln):
-        input_dim = self.input_dim
-        return np.random.uniform(-1, 1, (ln, input_dim))
-
     def train_both(self, x):
         ln = x.shape[0]
         # First trial for training discriminator
