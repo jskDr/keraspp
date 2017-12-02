@@ -6,7 +6,7 @@ from keras import datasets
 import keras
 assert keras.backend.image_data_format() == 'channels_last'
 
-from keraspp import aiprt    
+from keraspp import aiprt
 
 
 class Machine(aiprt.Machine_Generator):

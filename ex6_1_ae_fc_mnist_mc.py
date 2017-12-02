@@ -37,14 +37,14 @@ class AE(models.Model):
 ###########################
 from keras.datasets import mnist
 import numpy as np
-(x_train, _), (x_test, _) = mnist.load_data()
+(X_train, _), (X_test, _) = mnist.load_data()
 
-x_train = x_train.astype('float32') / 255.
-x_test = x_test.astype('float32') / 255.
-x_train = x_train.reshape((len(x_train), np.prod(x_train.shape[1:])))
-x_test = x_test.reshape((len(x_test), np.prod(x_test.shape[1:])))
-print(x_train.shape)
-print(x_test.shape)
+X_train = X_train.astype('float32') / 255.
+X_test = X_test.astype('float32') / 255.
+X_train = X_train.reshape((len(X_train), np.prod(X_train.shape[1:])))
+X_test = X_test.reshape((len(X_test), np.prod(X_test.shape[1:])))
+print(X_train.shape)
+print(X_test.shape)
 
 
 ###########################
@@ -61,7 +61,7 @@ def show_ae(autoencoder):
     encoder = autoencoder.Encoder()
     decoder = autoencoder.Decoder()
 
-    encoded_imgs = encoder.predict(x_test)
+    encoded_imgs = encoder.predict(X_test)
     decoded_imgs = decoder.predict(encoded_imgs)
 
     n = 10
@@ -69,7 +69,7 @@ def show_ae(autoencoder):
     for i in range(n):
 
         ax = plt.subplot(3, n, i + 1)
-        plt.imshow(x_test[i].reshape(28, 28))
+        plt.imshow(X_test[i].reshape(28, 28))
         plt.gray()
         ax.get_xaxis().set_visible(False)
         ax.get_yaxis().set_visible(False)
@@ -98,11 +98,11 @@ def main():
 
     autoencoder = AE(x_nodes, z_dim)
 
-    history = autoencoder.fit(x_train, x_train,
-                              epochs=10,
+    history = autoencoder.fit(X_train, X_train,
+                              epochs=2,
                               batch_size=256,
                               shuffle=True,
-                              validation_data=(x_test, x_test))
+                              validation_data=(X_test, X_test))
 
     plot_acc(history)
     plt.show()

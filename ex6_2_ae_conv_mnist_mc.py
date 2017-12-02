@@ -83,13 +83,13 @@ def show_ae(autoencoder, data):
     for i in range(n):
 
         ax = plt.subplot(2, n, i + 1)
-        plt.imshow(x_test[i], cmap='YlGnBu')
+        plt.imshow(x_test[i], cmap='gray')
         # plt.gray()
         ax.get_xaxis().set_visible(False)
         ax.get_yaxis().set_visible(False)
 
         ax = plt.subplot(2, n, i + 1 + n)
-        plt.imshow(decoded_imgs[i], cmap='YlGnBu')
+        plt.imshow(decoded_imgs[i], cmap='gray')
         # plt.gray()
         ax.get_xaxis().set_visible(False)
         ax.get_yaxis().set_visible(False)
