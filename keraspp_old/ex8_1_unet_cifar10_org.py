@@ -56,11 +56,11 @@ class UNET(models.Model):
         x = deconv_unet(encoded, c2, 32)
         x = deconv_unet(x, c1, 16)
 
-        decoded = Conv2D(n_ch, (3, 3), activation='sigmoid', padding='same')(x)
-        #decoded = Conv2D(n_ch, (3, 3), padding='same')(x)
+        decoded = Conv2D(n_ch, (3, 3), activation='sigmoid',
+                         padding='same')(x)
 
         super().__init__(original, decoded)
-        self.compile(optimizer='adadelta', loss='mse')
+        self.compile(optimizer='adadelta', loss='binary_crossentropy', metrics=['accuracy'])
 
 
 ###########################
@@ -137,7 +137,7 @@ class DATA():
 ###########################
 # UNET 검증
 ###########################
-from keraspp.skeras import plot_loss
+from keraspp.skeras import plot_history
 import matplotlib.pyplot as plt
 
 
@@ -145,13 +145,12 @@ import matplotlib.pyplot as plt
 # UNET 동작 확인
 ###########################
 import numpy as np
-from sklearn.preprocessing import minmax_scale
+
 
 def show_images(data, unet):
     x_test_in = data.x_test_in
     x_test_out = data.x_test_out
-    decoded_imgs_org = unet.predict(x_test_in)
-    decoded_imgs = decoded_imgs_org
+    decoded_imgs = unet.predict(x_test_in)
 
     if backend.image_data_format() == 'channels_first':
         print(x_test_out.shape)
@@ -182,10 +181,7 @@ def show_images(data, unet):
     for i in range(n):
 
         ax = plt.subplot(3, n, i + 1)
-        if x_test_in.ndim < 4:
-            plt.imshow(x_test_in[i], cmap='gray')
-        else:
-            plt.imshow(x_test_in[i])
+        plt.imshow(x_test_in[i])
         ax.get_xaxis().set_visible(False)
         ax.get_yaxis().set_visible(False)
 
@@ -202,7 +198,7 @@ def show_images(data, unet):
     plt.show()
 
 
-def main(in_ch=1, epochs=10, batch_size=512, fig=True):
+def main(in_ch=2, epochs=5, batch_size=128, fig=True):
     ###########################
     # 학습 및 확인
     ###########################
@@ -218,7 +214,7 @@ def main(in_ch=1, epochs=10, batch_size=512, fig=True):
                        validation_split=0.2)
 
     if fig:
-        plot_loss(history)
+        plot_history(history)
         show_images(data, unet)
 
 
@@ -226,13 +222,13 @@ if __name__ == '__main__':
     import argparse
     from distutils import util
 
-    parser = argparse.ArgumentParser(description='UNET for Cifar-10: Gray to RGB')
-    parser.add_argument('--input_channels', type=int, default=1,
-                        help='input channels (default: 1)')
-    parser.add_argument('--epochs', type=int, default=10,
-                        help='training epochs (default: 10)')
-    parser.add_argument('--batch_size', type=int, default=512,
-                        help='batch size (default: 1000)')
+    parser = argparse.ArgumentParser(description='UNET for Cifar-10: RG to RGB')
+    parser.add_argument('--input_channels', type=int, default=2,
+                        help='input channels (default: 2)')
+    parser.add_argument('--epochs', type=int, default=5,
+                        help='training epochs (default: 128)')
+    parser.add_argument('--batch_size', type=int, default=20,
+                        help='batch size (default: 20)')
     parser.add_argument('--fig', type=lambda x: bool(util.strtobool(x)),
                         default=True, help='flag to show figures (default: True)')
     args = parser.parse_args()
