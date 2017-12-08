@@ -79,24 +79,34 @@ def Data_func():
 import matplotlib.pyplot as plt
 
 
-def plot_loss(history):
-    # summarize history for loss
-    plt.plot(history.history['loss'])
-    plt.plot(history.history['val_loss'])
-    plt.title('Model Loss')
-    plt.ylabel('Loss')
-    plt.xlabel('Epoch')
-    plt.legend(['Train', 'Validation'], loc=0)
-
-
-def plot_acc(history):
+def plot_acc(history, title=None):
     # summarize history for accuracy
-    plt.plot(history.history['acc'])
-    plt.plot(history.history['val_acc'])
-    plt.title('Model accuracy')
-    plt.ylabel('Accuracy')
-    plt.xlabel('Epoch')
-    plt.legend(['Train', 'Validation'], loc=0)
+    if not isinstance(history, dict):
+        history = history.history
+
+    plt.plot(history['acc'])
+    plt.plot(history['val_acc'])
+    if title is not None:
+        plt.title(title)
+    plt.ylabel('정확도')
+    plt.xlabel('에포크')
+    plt.legend(['학습 데이터 성능', '검증 데이터 성능'], loc=0)
+    # plt.show()
+
+
+def plot_loss(history, title=None):
+    # summarize history for loss
+    if not isinstance(history, dict):
+        history = history.history
+
+    plt.plot(history['loss'])
+    plt.plot(history['val_loss'])
+    if title is not None:
+        plt.title(title)
+    plt.ylabel('손실')
+    plt.xlabel('에포크')
+    plt.legend(['학습 데이터 성능', '검증 데이터 성능'], loc=0)
+    # plt.show()
 
 
 ##############################################
@@ -120,9 +130,9 @@ def main():
     performace_test = model.evaluate(X_test, Y_test, batch_size=100)
     print('Test Loss and Accuracy ->', performace_test)
 
-    plot_loss(history)
+    plot_loss(history, '(a) 손실 추이')
     plt.show()
-    plot_acc(history)
+    plot_acc(history, '(b) 정확도 추이')
     plt.show()
 
 
