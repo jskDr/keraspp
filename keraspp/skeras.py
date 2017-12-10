@@ -55,3 +55,10 @@ def plot_history(history):
     plot_acc(history)
     plt.subplot(1, 2, 2)
     plot_loss(history)
+
+    
+def plot_loss_acc(history):
+    plot_loss(history, '(a) 손실 추이')
+    plt.show()            
+    plot_acc(history, '(b) 정확도 추이')
+    plt.show()

@@ -49,18 +49,18 @@ class AE(models.Model):
 ###########################
 # 데이타 불러오기
 ###########################
-from ex4_1_cnn_mnist_cl import DATA
+from cnn_mnist_cl import DATA
 
 
 ###########################
 # 학습 효과 분석
 ###########################
-from keraspp.skeras import plot_loss_acc
+from ann_mnist_cl import plot_loss, plot_acc
 import matplotlib.pyplot as plt
 
 
 ###########################
-# AE 결과 시각화
+# AE 동작 확인
 ###########################
 from keras import backend 
 
@@ -83,13 +83,13 @@ def show_ae(autoencoder, data):
     for i in range(n):
 
         ax = plt.subplot(2, n, i + 1)
-        plt.imshow(x_test[i], cmap='gray')
+        plt.imshow(x_test[i], cmap='YlGnBu')
         # plt.gray()
         ax.get_xaxis().set_visible(False)
         ax.get_yaxis().set_visible(False)
 
         ax = plt.subplot(2, n, i + 1 + n)
-        plt.imshow(decoded_imgs[i], cmap='gray')
+        plt.imshow(decoded_imgs[i], cmap='YlGnBu')
         # plt.gray()
         ax.get_xaxis().set_visible(False)
         ax.get_yaxis().set_visible(False)
@@ -110,7 +110,10 @@ def main(epochs=20, batch_size=128):
                               shuffle=True,
                               validation_split=0.2)
 
-    plot_loss_acc(history)
+    plot_acc(history)
+    plt.show()
+    plot_loss(history)
+    plt.show()
 
     show_ae(autoencoder, data)
     plt.show()

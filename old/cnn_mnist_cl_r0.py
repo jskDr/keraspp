@@ -62,32 +62,29 @@ class DATA():
 ###########################
 # 학습 효과 분석
 ###########################
-from keraspp.skeras import plot_loss_acc
+from ann_mnist_cl import plot_acc
 import matplotlib.pyplot as plt
 
 
 ###############################
 # 분류 CNN 학습 및 테스트
 ###############################
-def main():
-    batch_size = 128
-    epochs = 10
+batch_size = 128
+epochs = 10
 
-    data = DATA()
-    model = CNN(data.input_shape, data.num_classes)
+data = DATA()
+model = CNN(data.input_shape, data.num_classes)
 
-    history = model.fit(data.x_train, data.y_train,
-              batch_size=batch_size,
-              epochs=epochs,
-              validation_split=0.2)
+model.fit(data.x_train, data.y_train,
+          batch_size=batch_size,
+          epochs=epochs,
+          validation_split=0.2)
 
-    score = model.evaluate(data.x_test, data.y_test)
-    print()
-    print('Test loss:', score[0])
-    print('Test accuracy:', score[1])
+score = model.evaluate(data.x_test, data.y_test)
+print('Test loss:', score[0])
+print('Test accuracy:', score[1])
 
-    plot_loss_acc(history)
-
-
-if __name__ == '__main__':
-    main()
+plot_acc(history)
+plt.show()
+plot_loss(history)
+plt.show()

@@ -1,6 +1,7 @@
 ###########################
 # AE 모델링
 ###########################
+
 from keras import layers, models  # (Input, Dense), (Model)
 
 
@@ -37,20 +38,20 @@ class AE(models.Model):
 ###########################
 from keras.datasets import mnist
 import numpy as np
-(X_train, _), (X_test, _) = mnist.load_data()
+(x_train, _), (x_test, _) = mnist.load_data()
 
-X_train = X_train.astype('float32') / 255.
-X_test = X_test.astype('float32') / 255.
-X_train = X_train.reshape((len(X_train), np.prod(X_train.shape[1:])))
-X_test = X_test.reshape((len(X_test), np.prod(X_test.shape[1:])))
-print(X_train.shape)
-print(X_test.shape)
+x_train = x_train.astype('float32') / 255.
+x_test = x_test.astype('float32') / 255.
+x_train = x_train.reshape((len(x_train), np.prod(x_train.shape[1:])))
+x_test = x_test.reshape((len(x_test), np.prod(x_test.shape[1:])))
+print(x_train.shape)
+print(x_test.shape)
 
 
 ###########################
 # 학습 효과 분석
 ###########################
-from keraspp.skeras import plot_loss_acc
+from ann_mnist_cl import plot_loss, plot_acc
 import matplotlib.pyplot as plt
 
 
@@ -61,7 +62,7 @@ def show_ae(autoencoder):
     encoder = autoencoder.Encoder()
     decoder = autoencoder.Decoder()
 
-    encoded_imgs = encoder.predict(X_test)
+    encoded_imgs = encoder.predict(x_test)
     decoded_imgs = decoder.predict(encoded_imgs)
 
     n = 10
@@ -69,7 +70,7 @@ def show_ae(autoencoder):
     for i in range(n):
 
         ax = plt.subplot(3, n, i + 1)
-        plt.imshow(X_test[i].reshape(28, 28))
+        plt.imshow(x_test[i].reshape(28, 28))
         plt.gray()
         ax.get_xaxis().set_visible(False)
         ax.get_yaxis().set_visible(False)
@@ -98,13 +99,16 @@ def main():
 
     autoencoder = AE(x_nodes, z_dim)
 
-    history = autoencoder.fit(X_train, X_train,
+    history = autoencoder.fit(x_train, x_train,
                               epochs=10,
                               batch_size=256,
                               shuffle=True,
-                              validation_data=(X_test, X_test))
+                              validation_data=(x_test, x_test))
 
-    plot_loss_acc(history)
+    plot_acc(history)
+    plt.show()
+    plot_loss(history)
+    plt.show()
 
     show_ae(autoencoder)
     plt.show()
@@ -112,4 +116,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
