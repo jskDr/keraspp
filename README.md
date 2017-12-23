@@ -1,5 +1,4 @@
-# Keraspp
-## 코딩셰프의 3분 딥러닝, 케라스맛
+# 코딩셰프의 3분 딥러닝, 케라스맛
 [Keras 코드로 맛보는 ANN, DNN, CNN, RNN, AE, GAN, UNET](http://www.yes24.com/24/goods/57617933)
 
 케라스 코드로 맛보는 딥러닝 핵심 개념! 
