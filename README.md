@@ -8,7 +8,7 @@
 
 <a href="http://www.yes24.com/24/goods/57617933">
 <p align="center">
-  <img src="http://image.yes24.com/momo/TopCate1742/MidCate007/174166602.jpg" alt="3분 딥러닝 케라스맛" width="350"/>
+<img src="http://image.yes24.com/momo/TopCate1742/MidCate007/174166602.jpg" alt="3분 딥러닝 케라스맛" title="3분 딥러닝 케라스맛" width="350"/>
 </p>
 </a>
 
