@@ -62,3 +62,11 @@ def plot_loss_acc(history):
     plt.show()            
     plot_acc(history, '(b) 정확도 추이')
     plt.show()
+    
+    
+def plot_acc_loss(history):
+    plot_acc(history, '(a) 정확도 추이')
+    plt.show()
+    plot_loss(history, '(b) 손실 추이')
+    plt.show()            
+    

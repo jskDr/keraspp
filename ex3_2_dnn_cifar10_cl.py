@@ -49,24 +49,23 @@ import matplotlib.pyplot as plt
 
 
 # 분류 DNN 학습 및 테스팅 ####################
-def main():
+def main(Pd_l=[0.0, 0.0]):
     Nh_l = [100, 50]
-    Pd_l = [0.0, 0.0]
     number_of_class = 10
     Nout = number_of_class
 
     (X_train, Y_train), (X_test, Y_test) = Data_func()
     model = DNN(X_train.shape[1], Nh_l, Pd_l, Nout)
-    history = model.fit(X_train, Y_train, epochs=10, batch_size=100, validation_split=0.2)
+    history = model.fit(X_train, Y_train, epochs=100, batch_size=100, validation_split=0.2)
 
     performace_test = model.evaluate(X_test, Y_test, batch_size=100)
     print('Test Loss and Accuracy ->', performace_test)
 
-    plot_loss(history, '(a) 손실 추이')
+    plot_acc(history, '(a) 학습을 통한 정확도의 변화')
     plt.show()
-    plot_acc(history, '(b) 정확도 추이')
+    plot_loss(history, '(b) 학습을 통한 손실의 변화')
     plt.show()
 
 
 if __name__ == '__main__':
-    main()
+    main(Pd_l=[0.0, 0.0])

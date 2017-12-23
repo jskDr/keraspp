@@ -62,7 +62,7 @@ class DATA():
 ###########################
 # 학습 효과 분석
 ###########################
-from keraspp.skeras import plot_loss_acc
+from keraspp.skeras import plot_loss, plot_acc
 import matplotlib.pyplot as plt
 
 
@@ -86,8 +86,10 @@ def main():
     print('Test loss:', score[0])
     print('Test accuracy:', score[1])
 
-    plot_loss_acc(history)
-
+    plot_loss(history)
+    plt.show()
+    plot_acc(history)
+    plt.show()
 
 if __name__ == '__main__':
     main()

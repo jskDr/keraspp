@@ -55,7 +55,7 @@ from ex4_1_cnn_mnist_cl import DATA
 ###########################
 # 학습 효과 분석
 ###########################
-from keraspp.skeras import plot_loss_acc
+from keraspp.skeras import plot_loss, plot_acc
 import matplotlib.pyplot as plt
 
 
@@ -110,7 +110,10 @@ def main(epochs=20, batch_size=128):
                               shuffle=True,
                               validation_split=0.2)
 
-    plot_loss_acc(history)
+    plot_acc(history, '(a) 정확도 학습 곡선')
+    plt.show()
+    plot_loss(history, '(b) 손실 학습 곡선')
+    plt.show()
 
     show_ae(autoencoder, data)
     plt.show()

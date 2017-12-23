@@ -172,7 +172,7 @@ class Machine():
         print('Output results are saved in', foldname)
           
         if fig:
-            skeras.plot_loss_acc(history)        
+            skeras.plot_acc_loss(history)
 
         self.history = history
 

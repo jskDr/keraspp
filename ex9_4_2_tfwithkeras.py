@@ -53,9 +53,10 @@ def Data_func():
 from keraspp.skeras import plot_loss, plot_acc
 import matplotlib.pyplot as plt
 
-def run(model, sess, epochs, batch_size=100):
+def run(model, data, sess, epochs, batch_size=100):
     # epochs = 2
     # batch_size = 100
+    (X_train, Y_train), (X_test, Y_test) = data
     sess.run(model.Init_tf)
     with sess.as_default():
         N_tr = X_train.shape[0]
@@ -76,10 +77,10 @@ def main():
     number_of_class = 10
     Nout = number_of_class
 
-    (X_train, Y_train), (X_test, Y_test) = Data_func()
+    data = Data_func()
     model = DNN(Nin, Nh_l, Nout)
 
-    run(model, sess, 10, 100)
+    run(model, data, sess, 10, 100)
 
 
 if __name__ == '__main__': 

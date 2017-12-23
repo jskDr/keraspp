@@ -50,7 +50,7 @@ print(X_test.shape)
 ###########################
 # 학습 효과 분석
 ###########################
-from keraspp.skeras import plot_loss_acc
+from keraspp.skeras import plot_loss, plot_acc
 import matplotlib.pyplot as plt
 
 
@@ -104,7 +104,10 @@ def main():
                               shuffle=True,
                               validation_data=(X_test, X_test))
 
-    plot_loss_acc(history)
+    plot_acc(history, '(a) 학습 경과에 따른 정확도 변화 추이')
+    plt.show()
+    plot_loss(history, '(b) 학습 경과에 따른 손실값 변화 추이')
+    plt.show()
 
     show_ae(autoencoder)
     plt.show()

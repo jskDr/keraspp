@@ -3,6 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from sklearn import model_selection
 from keras import models, layers
+import seaborn as sns
 
 from keraspp import skeras
 
@@ -37,6 +38,21 @@ class Machine():
         plt.title('Validation Results')
         plt.show()
 
+        yp = m.predict(X_test).reshape(-1)
+        print('Loss:', m.evaluate(X_test, y_test))  
+        print(yp.shape, y_test.shape)
+
+        df = pd.DataFrame()
+        df['Sample'] = list(range(len(y_test))) * 2
+        df['Normalized #Passengers'] = np.concatenate([y_test, yp], axis=0)
+        df['Type'] = ['Original'] * len(y_test) + ['Prediction'] * len(yp)
+
+        plt.figure(figsize=(7, 5))
+        sns.barplot(x="Sample", y="Normalized #Passengers", 
+                    hue="Type", data=df)
+        plt.ylabel('Normalized #Passengers')
+        plt.show()
+        
         yp = m.predict(X)
 
         plt.plot(yp, label='Origial')

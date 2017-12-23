@@ -130,9 +130,9 @@ def main():
     performace_test = model.evaluate(X_test, Y_test, batch_size=100)
     print('Test Loss and Accuracy ->', performace_test)
 
-    plot_loss(history, '(a) 손실 추이')
+    plot_loss(history)
     plt.show()
-    plot_acc(history, '(b) 정확도 추이')
+    plot_acc(history)
     plt.show()
 
 
