@@ -12,6 +12,7 @@
 </p>
 </a>
 
+- [네이버책](http://book.naver.com/bookdb/book_detail.nhn?bid=12892401), [교보문고](http://www.kyobobook.co.kr/product/detailViewKor.laf?ejkGb=KOR&mallGb=KOR&barcode=9791162240397&orderClick=LEB&Kc=), [yes24](http://www.yes24.com/24/goods/57617933), [알라딘](http://www.aladin.co.kr/shop/wproduct.aspx?ItemId=125725712), [반디북US](http://www.bandibookus.com/front/product/detailProduct.do?prodId=4129910) 등에서 만나볼 수 있습니다. 
 
 ## 구성
 
