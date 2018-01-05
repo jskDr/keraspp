@@ -3,6 +3,12 @@ import matplotlib.pyplot as plt
 import os
 
 import matplotlib
+import matplotlib.font_manager as fm
+# fm.get_fontconfig_fonts()
+font_location = '/usr/share/fonts/truetype/nanum/NanumGothicBold.ttf'
+font_name = fm.FontProperties(fname=font_location).get_name()
+matplotlib.rc('font', family=font_name)
+
 
 def save_history_history(fname, history_history, fold=''):
     np.save(os.path.join(fold, fname), history_history)
@@ -22,9 +28,9 @@ def plot_acc(history, title=None):
     plt.plot(history['val_acc'])
     if title is not None:
         plt.title(title)
-    plt.ylabel('Accracy')
-    plt.xlabel('Epoch')
-    plt.legend(['Training data', 'Validation data'], loc=0)
+    plt.ylabel('정확도')
+    plt.xlabel('에포크')
+    plt.legend(['학습 데이터 성능', '검증 데이터 성능'], loc=0)
     # plt.show()
 
 
@@ -37,9 +43,9 @@ def plot_loss(history, title=None):
     plt.plot(history['val_loss'])
     if title is not None:
         plt.title(title)
-    plt.ylabel('Loss')
-    plt.xlabel('Epoch')
-    plt.legend(['Training data', 'Validation data'], loc=0)
+    plt.ylabel('손실')
+    plt.xlabel('에포크')
+    plt.legend(['학습 데이터 성능', '검증 데이터 성능'], loc=0)
     # plt.show()
 
 
@@ -52,15 +58,15 @@ def plot_history(history):
 
     
 def plot_loss_acc(history):
-    plot_loss(history, '(a) Loss trajectory')
+    plot_loss(history, '(a) 손실 추이')
     plt.show()            
-    plot_acc(history, '(b) Accracy trajectory')
+    plot_acc(history, '(b) 정확도 추이')
     plt.show()
     
     
 def plot_acc_loss(history):
-    plot_acc(history, '(a) Accracy trajectory')
+    plot_acc(history, '(a) 정확도 추이')
     plt.show()
-    plot_loss(history, '(b) Loss trajectory')
+    plot_loss(history, '(b) 손실 추이')
     plt.show()            
     
