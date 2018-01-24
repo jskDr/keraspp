@@ -88,9 +88,9 @@ def plot_acc(history, title=None):
     plt.plot(history['val_acc'])
     if title is not None:
         plt.title(title)
-    plt.ylabel('정확도')
-    plt.xlabel('에포크')
-    plt.legend(['학습 데이터 성능', '검증 데이터 성능'], loc=0)
+    plt.ylabel('Accuracy')
+    plt.xlabel('Epoch')
+    plt.legend(['Training', 'Verification'], loc=0)
     # plt.show()
 
 
@@ -103,9 +103,9 @@ def plot_loss(history, title=None):
     plt.plot(history['val_loss'])
     if title is not None:
         plt.title(title)
-    plt.ylabel('손실')
-    plt.xlabel('에포크')
-    plt.legend(['학습 데이터 성능', '검증 데이터 성능'], loc=0)
+    plt.ylabel('Loss')
+    plt.xlabel('Epoch')
+    plt.legend(['Training', 'Verification'], loc=0)
     # plt.show()
 
 
