@@ -88,13 +88,14 @@ class GAN(models.Sequential):
         z = self.get_z(ln)
         w = self.generator.predict(z, verbose=0)
         xw = np.concatenate((x, w))
-        y2 = [1] * ln + [0] * ln
+        y2 = np.array([1] * ln + [0] * ln)
         d_loss = self.discriminator.train_on_batch(xw, y2)
 
         # Second trial for training generator
         z = self.get_z(ln)
         self.discriminator.trainable = False
-        g_loss = self.train_on_batch(z, [1] * ln)
+        y2 = np.array([1] * ln)
+        g_loss = self.train_on_batch(z, y2)
         self.discriminator.trainable = True
 
         return d_loss, g_loss
