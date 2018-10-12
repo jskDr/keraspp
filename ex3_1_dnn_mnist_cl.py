@@ -24,8 +24,8 @@ from keras.utils import np_utils
  
 (X_train, y_train), (X_test, y_test) = datasets.mnist.load_data()
  
-y_train = np_utils.to_categorical(y_train)
-y_test = np_utils.to_categorical(y_test)
+Y_train = np_utils.to_categorical(y_train)
+Y_test = np_utils.to_categorical(y_test)
  
 L, W, H = X_train.shape
 X_train = X_train.reshape(-1, W * H)
@@ -36,6 +36,6 @@ X_test = X_test / 255.0
  
 # 분류 DNN 학습 및 테스팅 ####################
 model = DNN(Nin, Nh_l, Nout)
-history = model.fit(X_train, y_train, epochs=5, batch_size=100, validation_split=0.2)
-performace_test = model.evaluate(X_test, y_test, batch_size=100)
+history = model.fit(X_train, Y_train, epochs=5, batch_size=100, validation_split=0.2)
+performace_test = model.evaluate(X_test, Y_test, batch_size=100)
 print('Test Loss and Accuracy ->', performace_test)
