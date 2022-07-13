@@ -6,9 +6,9 @@
 
 간결하고 직관적인 인공신경망 API를 제공하는 케라스는 구글 텐서플로, 마이크로소프트 CNTK, 아마존 MXNET, OpenCL PlaidML, 시애노 등의 딥러닝 엔진에서 지원하는 인기 인공지능 툴입니다. 이 코드들은 딥러닝 인공신경망 구현에 케라스를 사용합니다. 케라스로 주요 인공신경망인 ANN, DNN, CNN, RNN, AE, GAN, UNET을 구현하는 방법을 알아봅니다. 따라서 인공지능과 딥러닝 인공신경망의 구현에 관심이 있는 누구나 이 코드의 사용자입니다.
 
-<a href="http://www.yes24.com/24/goods/57617933">
+<a href="https://www.hanbit.co.kr/store/books/look.php?p_code=B6313947129">
 <p align="center">
-<img src="http://image.yes24.com/momo/TopCate1742/MidCate007/174166602.jpg" alt="3분 딥러닝 케라스맛" title="3분 딥러닝 케라스맛" width="350"/>
+<img src="https://www.hanbit.co.kr/data/books/B6313947129_l.jpg" alt="3분 딥러닝 케라스맛" title="3분 딥러닝 케라스맛" width="350"/>
 </p>
 </a>
 
